@@ -1,0 +1,70 @@
+#SZYFR CEZARA Z ODSZYFROWYWANIEM OGÓLNY
+
+tekst = input()
+klucz = int(input())
+def szyfr_cezara(tekst,klucz):
+    zaszyfrowany_tekst = ''
+    for i in tekst:
+        x=ord(i)
+        x+=klucz
+        if x>127:
+            x-=127
+            x+=31
+        zaszyfrowany_tekst+=chr(x)
+    print(zaszyfrowany_tekst)
+
+    odszyfrowany=''
+    for i in zaszyfrowany_tekst:
+        y=ord(i)
+        y-=klucz
+        if y<32:
+            y+=127
+            y-=31
+        odszyfrowany+=chr(y)
+    print(odszyfrowany)
+
+szyfr_cezara(tekst,klucz)
+
+#SZYFR CEZARA Z ODSZYFROWYWANIEM NA SAME LITERY
+
+tekst = input()
+klucz = int(input())
+def szyfr_short(tekst,klucz):
+    zaszyfrowany_tekst = ''
+    for i in tekst:
+        if i.isalpha():
+            if i.isupper():
+                x = ord(i)
+                x += klucz
+                if x > 90:
+                    x-=90
+                    x+=64
+            else:
+                x = ord(i)
+                x += klucz
+                if x>122:
+                    x -= 122
+                    x += 96
+            zaszyfrowany_tekst += chr(x)
+        else:
+            zaszyfrowany_tekst+=i
+    print(zaszyfrowany_tekst)
+
+    odszyfrowany=''
+    for i in zaszyfrowany_tekst:
+        if i==" ":
+            odszyfrowany+=" "
+            continue
+        y = ord(i)
+        y -= klucz
+        if y>90 and y<97:
+            y+=26
+        elif y<65:
+            y+=26
+        odszyfrowany+=chr(y)
+    print(odszyfrowany)
+
+szyfr_short(tekst,klucz)
+
+
+
