@@ -1,0 +1,60 @@
+import random
+import time
+
+class wojownik:
+    def __init__(self,nazwa,zycie,pObroby,pAtaku):
+        self.nazwa=nazwa
+        self.zycie=zycie
+        self.pAtaku = pAtaku
+        self.pObrony=pObroby
+
+    def atak(self):
+        return random.randint(0,self.pAtaku)
+
+    def obrona(self):
+        return random.randint(0,self.pObrony)
+
+    def utrataZycia(self,ilosc):
+        self.zycie-=ilosc
+        if self.zycie<=0:
+            print(self.nazwa, "polegl w walce. Koniec gry.")
+
+    def czyZyje(self):
+        if self.zycie>0:
+            return True
+        else:
+            return False
+
+    def __str__(self):
+        return self.nazwa
+
+def walka(wojownik1,wojownik2):
+    i=1
+    while wojownik1.czyZyje() and wojownik2.czyZyje():
+        print("Runda:",i)
+        wyswietl_Statystyke(wojownik1)
+        wyswietl_Statystyke(wojownik2)
+        if random.randint(0,1)==0:
+            pojedynek(wojownik1,wojownik2)
+        else:
+            pojedynek(wojownik2,wojownik1)
+        i+=1
+        print("")
+        time.sleep(3)
+
+def wyswietl_Statystyke(wojownik):
+    print(wojownik,"posiada",wojownik.zycie,"życia.")
+
+def pojedynek(x,y):
+    print(x.nazwa,"atakuje",y.nazwa)
+    ilosc=x.atak()-y.obrona()
+    if ilosc>0:
+        print(y.nazwa, "stracił", ilosc, "punktów.")
+        y.utrataZycia(ilosc)
+    else:
+        print(y.nazwa,"się wybronił!")
+
+Minion=wojownik("Minion",random.randint(0,500),random.randint(0,70),random.randint(70,200))
+Damian=wojownik("Damian",random.randint(0,500),random.randint(0,70),random.randint(70,200))
+
+walka(Minion,Damian)
