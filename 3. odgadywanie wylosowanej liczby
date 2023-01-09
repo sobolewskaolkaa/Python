@@ -1,0 +1,39 @@
+#opcja, że to ja odgaduję liczbę wylosowaną przez komputer
+
+import random
+
+def guessing_game():
+    x=int(input("Dolna granica to 1. Podaj górną granicę do wylosowania liczby: "))
+    liczba=random.randint(1,x)
+    print("Górna granica, którą wybrałeś to",x)
+    guess = 0
+    while guess!=liczba:
+        guess=int(input("Zgadnij wylosowaną liczbę: "))
+        if guess>liczba:
+            print("Podaj mniejszą liczbę.")
+        elif guess<liczba:
+            print("Podaj większą liczbę.")
+    print("Gratulacje! Zgadłeś wylosowaną liczbę.")
+
+guessing_game()
+
+#opcja, że to komputer odgaduje moją liczbę
+
+def guessing_game2():
+    x=int(input("Spróbuję odgadnąć numer, o którym pomyślisz. Podaj mi proszę górną granicę, do której mam zgadywać: "))
+    print("Górna granica, którą wybrałeś to",x)
+    low=1
+    high=x
+    odpowiedz=0
+    while odpowiedz!="C":
+        guess = random.randint(low, high)
+        print(guess)
+        odpowiedz=input("Jeśli liczba się zgadza wpisz C, jeśli liczba jest za mała wpisz L, jeśli liczba jest za duża wpisz H: ")
+        if odpowiedz=="L":
+            low=guess+1
+        elif odpowiedz=="H":
+            high=guess-1
+    print("Komputer odgadł wymyśloną przez Ciebie liczbę!")
+
+guessing_game2()
+
