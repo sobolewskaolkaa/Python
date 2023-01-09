@@ -1,0 +1,123 @@
+import tkinter
+
+symbole=["%","CE","C","\u21BA","x\u00B2","+/-",".","0","7","8","9","/","4","5","6","*","1","2","3","-"]
+
+def Okienko():
+    root=tkinter.Tk()
+    root.geometry("400x346")
+    root.title("Calculator")
+
+    return root
+
+def EkranObliczen(root):
+    ekran=[tkinter.Label(root,bg="light grey",width=56,anchor="w",borderwidth=0) for i in range(3)]
+
+    for i in range(len(ekran)):
+        ekran[i].grid(row=i,columnspan=4,ipadx=1,ipady=10)
+
+    return ekran
+
+def PolenaDane(root,ekran):
+    polenadane=tkinter.Entry(root)
+    polenadane.grid(row=len(ekran)+1,columnspan=4,ipadx=138,ipady=10)
+
+    return polenadane
+
+def komunikat(root,ekran,tekst):
+    blad=tkinter.Label(root,bg="white",width=56,anchor="w",borderwidth=2,text=tekst)
+    blad.grid(row=len(ekran)+2,columnspan=4,ipadx=1,ipady=10)
+
+    return blad
+
+def funkcja_przyciskow(polenadane,symbol):
+    def f():
+        if symbol=="C":
+            polenadane.delete(0,tkinter.END)
+        elif symbol=="CE":
+            wyrazenie=polenadane.get()
+            for i,c in enumerate(wyrazenie[::-1]):
+                if c in ['+', '-', '/', '*']:
+                    wyrazenie=wyrazenie[:-i-1]
+                    polenadane.delete(0,tkinter.END)
+                    polenadane.insert(0,wyrazenie)
+                    break
+        elif symbol=="x\u00B2":
+            polenadane.insert(tkinter.END,"\u00B2")
+        elif symbol=="\u21BA":
+            bufor = polenadane.get()[:-1]
+            polenadane.delete(0, tkinter.END)
+            polenadane.insert(0, bufor)
+        elif symbol=="+/-":
+            wyrazenie = polenadane.get()
+            for i,c in enumerate(wyrazenie[::-1]):
+                if c in ['+', '-', '/', '*']:
+                    wyrazenie = wyrazenie[:-i] + "-" + wyrazenie[-i:]
+                    polenadane.delete(0, tkinter.END)
+                    polenadane.insert(0, wyrazenie)
+                    break
+            if "+" not in wyrazenie and "-" not in wyrazenie and "*" not in wyrazenie and "/" not in wyrazenie:
+                wyrazenie = "-" + wyrazenie
+                polenadane.delete(0, tkinter.END)
+                polenadane.insert(0, wyrazenie)
+        else:
+            tekst=symbol
+            polenadane.insert(tkinter.END,tekst)
+    return f
+
+def liczenie(polenadane, ekran):
+    def f():
+        try:
+            wyrazenie=polenadane.get()
+            for i,c in enumerate(wyrazenie):
+                if c=="²":
+                    wyrazenie = wyrazenie.replace("²","**2")
+            polenadane.delete(0, tkinter.END)
+            polenadane.insert(0, str(eval(wyrazenie)))
+            komunikat(root, ekran, "")
+            for i in range(1,len(ekran)):
+                if ekran[-i]["text"]:
+                    ekran[i - 1]["text"] = ekran[i]["text"]
+                    ekran[i]["text"] = wyrazenie + " = " + str(eval(wyrazenie))
+                else:
+                    ekran[-1]["text"] = wyrazenie + " = " + str(eval(wyrazenie))
+
+        except SyntaxError:
+            return komunikat(root,ekran,"Entered calculation is incorrect.")
+        except ZeroDivisionError:
+            return komunikat(root, ekran, "Entered calculation is incorrect (division by zero).")
+    return f
+
+def inicjalizacja_przyciskow(root,symbole):
+    przyciski=[tkinter.Button(root,text=symbol,width=12,bg="pink")for symbol in symbole]
+    for i in range(len(przyciski)):
+        if i>=0 and i<4:
+            przyciski[i].grid(row=len(ekran)+3,column=i,ipadx=1)
+        elif i>=4 and i<8:
+            przyciski[i].grid(row=len(ekran)+4, column=i-4,ipadx=1)
+        elif i >= 8 and i < 12:
+            przyciski[i].grid(row=len(ekran)+5, column=i-8,ipadx=1)
+        elif i >= 12 and i < 16:
+            przyciski[i].grid(row=len(ekran)+6, column=i-12,ipadx=1)
+        elif i >= 16 and i < 20:
+            przyciski[i].grid(row=len(ekran)+7, column=i-16,ipadx=1)
+        else:
+            przyciski[i].grid(row=len(ekran)+8, column=i-20,ipadx=1)
+    for i in range(len(przyciski)):
+        przyciski[i].configure(command=funkcja_przyciskow(polenadane, przyciski[i]["text"]))
+    przycisk_plus = tkinter.Button(root, text="+", width=27, bg="pink")
+    przycisk_plus.grid(row=len(ekran) + 8, column=0, columnspan=2, ipadx=0)
+    przycisk_plus.configure(command=funkcja_przyciskow(polenadane,przycisk_plus["text"]))
+    przycisk_rownosci=tkinter.Button(root,text="=",width=27,bg="pink")
+    przycisk_rownosci.grid(row=len(ekran)+8, column=2,columnspan=2,ipadx=0)
+    przycisk_rownosci.configure(command=liczenie(polenadane,ekran))
+    return przyciski
+
+if __name__=="__main__":
+    root=Okienko()
+    ekran=EkranObliczen(root)
+    polenadane=PolenaDane(root,ekran)
+    przyciski=inicjalizacja_przyciskow(root,symbole)
+    komunikat(root,ekran,"")
+    wynik=liczenie(polenadane,ekran)
+
+    root.mainloop()
