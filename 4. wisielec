@@ -1,0 +1,59 @@
+#WISIELEC
+
+import random
+
+print("Hi! Welcome to the HANGMAN. Pick one of the categories by pressing 1,2 or 3.")
+category=int(input("1. FARM ANIMALS, 2. CAR BRANDS, 3. PROGRAMMING LANGUAGES: "))
+
+farm_animals=["chicken","pig","cow","horse","sheep","llama","donkey","duck","goose","piglet"]
+car_brands=["bentley","mercedes","ferrari","porsche","ford","tesla","maybach","subaru","toyota","lexus"]
+programming_languages=["python","java","php","ruby","scala","javascript","perl","swift","c","rust"]
+
+haslo=""
+
+if category==1:
+    haslo=random.choice(farm_animals)
+elif category==2:
+    haslo=random.choice(car_brands)
+else:
+    haslo=random.choice(programming_languages)
+
+category_name=""
+
+if category==1:
+    category_name="FARM ANIMALS"
+elif category==2:
+    category_name="CAR BRANDS"
+else:
+    category_name="PROGRAMMING LANGUAGES"
+
+print("OK. You picked the",category_name,"category. Now try to guess the word from that category. Remember you can only use small letters.")
+
+def odgadywanie(tekst):
+    coded_password=["_" for i in tekst]
+    for i in coded_password:
+        print(i,"",end="")
+    haslo_lista=[i for i in tekst]
+    while coded_password != haslo_lista:
+        letter=input("\nPick a letter: ")
+        if letter.isalpha():
+            if letter in haslo:
+                print("Correct!")
+                for i in range(len(haslo)):
+                    if haslo_lista[i]==letter:
+                        coded_password[i]=letter
+                for i in coded_password:
+                    print(i, "", end="")
+            else:
+                print("Wrong letter. Try again!")
+                for i in coded_password:
+                    print(i, "", end="")
+        else:
+            print("That's not a letter. Try again.")
+            for i in coded_password:
+                print(i, "", end="")
+
+    print("\nCongrats! You guessed the word. It was:", haslo)
+
+odgadywanie(haslo)
+
