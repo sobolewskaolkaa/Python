@@ -1,0 +1,118 @@
+import pickle
+import tkinter
+from tkinter import *
+from tkinter.font import Font
+from tkinter import filedialog
+
+root=tkinter.Tk()
+root.geometry('300x597')
+root.title('To-Do List')
+root.iconbitmap('C:/Users/Ola/Desktop/pajton/favicon (1).ico')
+root.resizable(False,False)
+
+czcionka=Font(family="Gabriola",size=15,weight="normal")
+
+top_image=PhotoImage(file="C:/Users/Ola/Documents/ZDJ_TODO/cooltext428215604901359.png")
+tkinter.Label(image=top_image).pack(side=TOP)
+
+ramka=Frame(root)
+ramka.pack()
+scroll=Scrollbar(ramka)
+scroll.pack(side=RIGHT,fill=BOTH)
+
+lista=Listbox(ramka,bg="gray94",
+              font=czcionka,
+              width=38,
+              height=8,
+              bd=0,
+              highlightthickness=0,
+              selectbackground='#E0E0E0',
+              selectforeground="black",
+              activestyle="none",
+              yscrollcommand = scroll.set)
+lista.pack(side=LEFT,fill=BOTH)
+scroll.config(command=lista.yview)
+
+polenadane=tkinter.Entry(root,font=("Gabriola",15))
+polenadane.pack(ipady=0,ipadx=80)
+
+def dodaj(event):
+    if len(polenadane.get())>0:
+        lista.insert(END,polenadane.get())
+        polenadane.delete(0, END)
+    else:
+        pass
+
+def usun(event):
+    lista.delete(ANCHOR)
+
+def skresl():
+    lista.itemconfig(ANCHOR,fg='gray75',selectforeground="WHITE")
+    lista.selection_clear(0,END)
+
+def odkresl():
+    lista.itemconfig(ANCHOR,fg='BLACK',selectforeground="black")
+
+def usun_skreslone():
+    count=0
+    while count<lista.size():
+        if lista.itemcget(count,"fg")=='gray75':
+            lista.delete(count)
+        else:
+            count+=1
+
+root.bind('<Return>',dodaj)
+root.bind('<Delete>',usun)
+
+ikona_usun=PhotoImage(file="C:/Users/Ola/Documents/ZDJ_TODO/delete.png")
+ikona_dodaj=PhotoImage(file="C:/Users/Ola/Documents/ZDJ_TODO/add.png")
+ikona_skreslanie=PhotoImage(file="C:/Users/Ola/Documents/ZDJ_TODO/cross off.png")
+ikona_odkeslanie=PhotoImage(file="C:/Users/Ola/Documents/ZDJ_TODO/uncross.png")
+ikona_usuniecie_skreslonych=PhotoImage(file="C:/Users/Ola/Documents/ZDJ_TODO/delete crossed.png")
+
+usuwanie=tkinter.Button(root,image=ikona_usun,border=0,padx=200)
+usuwanie.bind('<Button-1>', usun)
+dodawanie=tkinter.Button(root,image=ikona_dodaj,border=0)
+dodawanie.bind('<Button-1>', dodaj)
+skreslanie=tkinter.Button(root,image=ikona_skreslanie,border=0,command=skresl)
+odkeslanie=tkinter.Button(root,image=ikona_odkeslanie,border=0,command=odkresl)
+usuniecie_skreslonych=tkinter.Button(root,image=ikona_usuniecie_skreslonych,border=0,command=usun_skreslone)
+
+przyciski=[usuwanie,dodawanie,skreslanie,odkeslanie,usuniecie_skreslonych]
+
+for i in przyciski:
+    i.pack()
+
+def clear_list():
+    lista.delete(0,END)
+
+def save_list():
+    file_name=filedialog.asksaveasfilename(initialdir="C:/Users/Ola/Documents/todo")
+    count = 0
+    while count < lista.size():
+        if lista.itemcget(count, "fg") == 'gray75':
+            lista.delete(count)
+        else:
+            count += 1
+    to_be_saved=lista.get(0,END)
+    output_file=open(file_name,'wb')
+    pickle.dump(to_be_saved,output_file)
+
+def open_list():
+    file_name=filedialog.askopenfilename(initialdir="C:/Users/Ola/Documents/todo")
+    clear_list()
+    input_file=open(file_name,'rb')
+    to_be_opened=pickle.load(input_file)
+    for item in to_be_opened:
+        lista.insert(END,item)
+
+glowneMenu=tkinter.Menu()
+root.config(menu=glowneMenu)
+fileMenu=tkinter.Menu(glowneMenu,tearoff=False)
+glowneMenu.add_cascade(label="File",menu=fileMenu)
+fileMenu.add_command(label="Save List",command=save_list)
+fileMenu.add_command(label="Open List",command=open_list)
+fileMenu.add_separator()
+fileMenu.add_command(label="Clear List",command=clear_list)
+
+root.mainloop()
