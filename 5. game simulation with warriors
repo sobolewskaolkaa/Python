@@ -54,7 +54,7 @@ def pojedynek(x,y):
     else:
         print(y.nazwa,"się wybronił!")
 
-Minion=wojownik("Minion",random.randint(0,500),random.randint(0,70),random.randint(70,200))
-Damian=wojownik("Damian",random.randint(0,500),random.randint(0,70),random.randint(70,200))
+wojownik1=wojownik("wojownik1",random.randint(0,500),random.randint(0,70),random.randint(70,200))
+wojownik2=wojownik("wojownik2",random.randint(0,500),random.randint(0,70),random.randint(70,200))
 
-walka(Minion,Damian)
+walka(wojownik1,wojownik2)
